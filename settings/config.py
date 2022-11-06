@@ -4,6 +4,8 @@ import os
 
 TOKEN = '5531445496:AAFXEc-qeg4egjtBgDtUQxAvr_CbE__FYms'
 
+APP_URL = 'https://py-tel-bot-1.herokuapp.com/' + TOKEN
+
 DB_NAME = 'products.db'
 
 VERSION = '0.0.1'
