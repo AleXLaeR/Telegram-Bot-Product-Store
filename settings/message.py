@@ -99,7 +99,7 @@ apply = """
 """
 
 
-REPLY_MESSAGES = {
+REPLY_MESSAGES =  {
     'trade_store': trade_store,
     'product_order': product_order,
     'order': order,

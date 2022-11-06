@@ -34,7 +34,7 @@ class DBManager(metaclass=Singleton):
     def add_order(self, product_id, *, user_id=1, quantity=1) -> None:
         if product_id in self.select_product_ids(amount='all'):
             order_quantity = self.select_order_quantity(product_id)
-            self._update_order_attr(product_id, order_quantity + 1, by_name='quantity')
+            self.update_order_attr(product_id, order_quantity + 1, by_name='quantity')
         else:
             order = Order(
                 quantity=quantity,
@@ -46,7 +46,7 @@ class DBManager(metaclass=Singleton):
             self._session.commit()
 
         product_quantity = self.select_product_attr(product_id, by_name='quantity')
-        self._update_product_attr(product_id, product_quantity - 1, by_name='quantity')
+        self.update_product_attr(product_id, product_quantity - 1, by_name='quantity')
 
         self._session.close()
 
@@ -64,7 +64,13 @@ class DBManager(metaclass=Singleton):
         self._session.close()
         return [item[0] for item in result]
 
-    def _update_order_attr(self, row_id, new_value, *, by_name) -> None:
+    def select_all_order_ids(self) -> list[int]:
+        result = self._session.query(Order.id).all()
+
+        self._session.close()
+        return [item[0] for item in result]
+
+    def update_order_attr(self, row_id, new_value, *, by_name) -> None:
         self._session.query(Order) \
             .filter_by(product_id=row_id) \
             .update({by_name: new_value})
@@ -72,7 +78,7 @@ class DBManager(metaclass=Singleton):
         self._session.commit()
         self._session.close()
 
-    def _update_product_attr(self, product_id, new_value, *, by_name) -> None:
+    def update_product_attr(self, product_id, new_value, *, by_name) -> None:
         self._session.query(Products) \
             .filter_by(id=product_id) \
             .update({by_name: new_value})
@@ -114,3 +120,19 @@ class DBManager(metaclass=Singleton):
         result = self._session.query(Order).count()
         self._session.close()
         return result
+
+    def cancel_order(self, product_id) -> None:
+        self._session.query(Order) \
+            .filter_by(product_id=product_id) \
+            .delete()
+
+        self._session.commit()
+        self._session.close()
+
+    def cancel_all_orders(self) -> None:
+        for ord_id in self.select_all_order_ids():
+            self._session.query(Order) \
+                .filter_by(id=ord_id) \
+                .delete()
+
+            self._session.close()

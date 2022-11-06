@@ -15,7 +15,7 @@ class InlineQueryHandler(Handler):
                 self.DB.select_product_attr(product_code_id, by_name='name'),
                 self.DB.select_product_attr(product_code_id, by_name='title'),
                 self.DB.select_product_attr(product_code_id, by_name='price'),
-                self.DB.select_product_attr(product_code_id, by_name='quantity')
+                 self.DB.select_product_attr(product_code_id, by_name='quantity')
             ),
             show_alert=True
         )
