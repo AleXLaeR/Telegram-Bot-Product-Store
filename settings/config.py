@@ -2,7 +2,7 @@ from emoji import emojize
 import os
 
 
-TOKEN = '5531445496:AAFXEc-qeg4egjtBgDtUQxAvr_CbE__FYms'
+TOKEN = os.environ['Telegram_BOT_API_TOKEN']
 
 DB_NAME = 'products.db'
 
